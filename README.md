@@ -11,4 +11,4 @@ bot can do some stuff, but he's still pretty bad
 ## requirements
 ``pip install -r requirements.txt``  
 ``token`` a file containing your bot token for discord as its only line  
-``hackerearth`` a file containing your "client_secret" for [api.hackereatch](https://api.hackerearth.com/v3/code/run/)
+``hackerearth`` a file containing your "client_secret" for [api.hackereath](https://api.hackerearth.com/v3/code/run/)
