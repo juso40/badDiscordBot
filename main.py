@@ -1,12 +1,13 @@
 import discord
 from discord.ext import commands
 
-
 bot = commands.Bot(command_prefix="!")
 bot.load_extension("cogs.imagecog")
 bot.load_extension("cogs.mathcog")
 bot.load_extension("cogs.codecog")
 bot.load_extension("cogs.randomcog")
+bot.load_extension("cogs.gamescog")
+bot.load_extension("cogs.textcog")
 bot.load_extension("cogs.errorcog")
 
 

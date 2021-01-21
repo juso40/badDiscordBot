@@ -15,11 +15,15 @@ class ImageCog(commands.Cog):
         self.bot = bot
         self.image_url_format = "https://images.search.yahoo.com/search/images?p={query}&vm=p"
 
-    @commands.command()
-    async def image(self, ctx: commands.Context, *,  argument, is_random=False):
+    @commands.command(description="Find an image for your provided arguments", help="Find an image on the www")
+    async def image(self, ctx: commands.Context, *, argument, is_random=False):
         await ctx.message.delete()  # delete the user message
-        r = requests.get(self.image_url_format.format(query=argument)).content
-        soup = BeautifulSoup(r, 'html.parser')
+        try:
+            r = requests.get(self.image_url_format.format(query=argument)).content
+            soup = BeautifulSoup(r, 'html.parser')
+        except Exception as e:
+            await ctx.send(repr(e))
+            return
         results = soup.find("ul", {"id": "sres"})
         if results is None:
             return await ctx.send(f"Could not find any images for {argument}.")
@@ -43,7 +47,8 @@ class ImageCog(commands.Cog):
         msg = await ctx.send(embed=embed)
         await msg.add_reaction("❌")
 
-    @commands.command()
+    @commands.command(description="Find a random image for your provided arguments",
+                      help="Find a random image for your arguments")
     async def rimage(self, ctx: commands.Context, *, argument):
         await self.image(ctx, argument=argument, is_random=True)
 

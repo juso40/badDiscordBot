@@ -9,7 +9,8 @@ class ErrorCog(commands.Cog):
     @commands.Cog.listener()
     async def on_command_error(self, ctx: commands.Context, error: commands.CommandError):
         if isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send(f"Command !{ctx.command} requires additional arguments.")
+            return await ctx.send(f"Command !{ctx.command} requires additional arguments.")
+        await ctx.send(f"Oops something went wrong:\n{error.with_traceback(error.__traceback__)}")
 
 
 def setup(bot):

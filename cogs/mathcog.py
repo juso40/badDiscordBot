@@ -9,7 +9,7 @@ class MathCog(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
+    @commands.command(description="Simple math evaluation", help="Evaluates your math string")
     async def math(self, ctx, *, argument):
         argument = argument.replace("`", "").replace("\\", "")
         try:

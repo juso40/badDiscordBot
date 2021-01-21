@@ -21,7 +21,7 @@ class CodeCog(commands.Cog):
         self.language_dict = {"py": "PYTHON3", "c": "C", "cpp": "CPP14", "c++": "CPP14",
                               "java": "JAVA", "cs": "CSHARP", "rust": "RUST"}
 
-    @commands.command()
+    @commands.command(description="Runs your Code in codeblocks", help="Runs your code in codeblocks")
     async def code(self, ctx, *, argument):
         cleaned_up = argument.replace("```", "")
         language = cleaned_up.split("\n", maxsplit=1)[0].strip().lower()
@@ -46,13 +46,14 @@ class CodeCog(commands.Cog):
             await ctx.send(repr(e))
             return
 
-        response = response.json()["run_status"]
+        response = response.json()
+        if response["compile_status"]:
+            await ctx.send(f"```{language}\n{response['compile_status']}\n```")
+
+        response = response["run_status"]
         if response["stderr"]:
             await ctx.send(f"```{language}\n{response['stderr']}\n```")
-            return
-
-        output = response["output"]
-        await ctx.send(f"```{language}\n{output}\n```")
+        await ctx.send(f"```{language}\n{response['output']}\n```")
 
 
 def setup(bot):
