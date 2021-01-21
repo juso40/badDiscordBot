@@ -8,6 +8,7 @@ bot.load_extension("cogs.codecog")
 bot.load_extension("cogs.randomcog")
 bot.load_extension("cogs.gamescog")
 bot.load_extension("cogs.textcog")
+bot.load_extension("cogs.pokemoncog")
 bot.load_extension("cogs.errorcog")
 
 

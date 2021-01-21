@@ -1,11 +1,14 @@
-import aiohttp
-import asyncio
 import discord
 from discord.ext import commands
 
+import aiohttp
+import asyncio
+import random
 import re
-from bs4 import BeautifulSoup
 import deep_translator
+
+from stemming.porter2 import stem
+from bs4 import BeautifulSoup
 
 
 class TextCog(commands.Cog):
@@ -42,25 +45,26 @@ class TextCog(commands.Cog):
         try:
             trans = deep_translator.GoogleTranslator(source="auto", target="en")
             for word in argument.split():
-                original_text_dict[word] = trans.translate(word)
+                if len(word) < 2:
+                    continue
+                original_text_dict[word] = stem(trans.translate(word))
         except Exception as e:
-            return await ctx.send(repr(e))
+            return await ctx.send(f"{repr(e)}")
 
-        await asyncio.sleep(0.1)
         emoji_dict = {}
         try:
             # gather all emojis async style
             async with aiohttp.ClientSession() as session:
-                for word in argument.split():
-                    async with session.get(self.url_emojipedia.format(query=original_text_dict[word])) as result:
+                for rword, tword in original_text_dict.items():
+                    async with session.get(self.url_emojipedia.format(query=tword)) as result:
                         soup = BeautifulSoup(await result.text(), "html.parser").find("ol", {"class": "search-results"})
-                        emoji_dict[word] = soup.find("span", {"class": "emoji"}).text
+                        emoji_dict[rword] = random.choice(soup.find_all("span", {"class": "emoji"})).text
         except Exception as e:
-            return await ctx.send(repr(e))
+            return await ctx.send(f"{repr(e)}")
 
         emojified = ""
         for word in argument.split():
-            emojified += f"{word}{emoji_dict[word]} "
+            emojified += f"{word}{emoji_dict.get(word, '')} "
 
         await ctx.send(emojified)
 

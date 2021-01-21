@@ -25,6 +25,11 @@ class RandomCog(commands.Cog):
         msg = await ctx.send(response)
         await msg.add_reaction("❌")
 
+    @commands.command(name="decide")
+    async def decide_between(self, ctx: commands.Context, *, arguments):
+        arguments = arguments.split(";")
+        await ctx.send(f"The bot has decided: {random.choice(arguments)}!")
+
 
 def setup(bot):
     bot.add_cog(RandomCog(bot))
